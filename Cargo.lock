@@ -227,9 +227,11 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "config",
+ "hyper",
  "reqwest",
  "shuttle-axum",
  "shuttle-runtime",
+ "tokio",
  "tracing",
 ]
 
