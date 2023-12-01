@@ -23,19 +23,3 @@ fn recalibrate(input: String) -> isize {
 
     pre_calibrated.pow(3)
 }
-
-// #[tracing::instrument]
-// pub async fn day1b(Path(path): Path<String>) -> impl IntoResponse {
-//
-//     tracing::info!("{}", format!("Day 1 inputs: {}", path));
-//
-//     let pre_calibrated = path
-//         .split("/")
-//         .map(|s| s.parse::<isize>().unwrap())
-//         .reduce(|a, b| a ^ b)
-//         .unwrap();
-//
-//     let calibrated = pre_calibrated.pow(3);
-//
-//     (StatusCode::OK, calibrated.to_string())
-// }
