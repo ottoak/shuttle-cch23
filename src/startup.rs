@@ -1,11 +1,8 @@
-use axum::{routing::get, Router};
+use axum::Router;
 
-use crate::routes::*;
+use crate::routes;
 
 pub fn run() -> Router {
     // build our application
-    Router::new()
-        .route("/", get(home))
-        .route("/-1/error", get(day0))
-        .route("/1/*nums", get(day1))
+    Router::new().nest("/", routes::router())
 }

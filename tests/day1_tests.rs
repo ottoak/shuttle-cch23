@@ -1,4 +1,3 @@
-use shuttle_runtime::tokio;
 mod common;
 #[tokio::test]
 async fn day1_test_core() {

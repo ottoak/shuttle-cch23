@@ -1,4 +1,3 @@
-use shuttle_runtime::tokio;
 mod common;
 
 #[tokio::test]

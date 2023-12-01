@@ -1,9 +1,14 @@
 use axum::{
-    extract::{Path},
-    http::StatusCode
+    extract::Path,
+    http::StatusCode,
+    response::IntoResponse,
+    routing::get,
+    Router,
 };
-use axum::response::IntoResponse;
 
+pub fn router() -> Router {
+    Router::new().route("/1/*path", get(day1))
+}
 
 #[tracing::instrument]
 pub async fn day1(Path(path): Path<String>) -> impl IntoResponse {
@@ -11,15 +16,14 @@ pub async fn day1(Path(path): Path<String>) -> impl IntoResponse {
     let calibrated = recalibrate(path);
     tracing::info!("{}", format!("Day 1 output: {}", calibrated));
 
-    (StatusCode::OK, calibrated.to_string())
+    (StatusCode::OK, calibrated)
 }
 
-fn recalibrate(input: String) -> isize {
-    let pre_calibrated = input
+fn recalibrate(input: String) -> String {
+    input
         .split("/")
-        .map(|s| s.parse::<isize>().unwrap())
+        .map(|s| s.parse::<i32>().unwrap())
         .reduce(|a, b| a ^ b)
-        .unwrap();
-
-    pre_calibrated.pow(3)
+        .map(|x| x.pow(3).to_string())
+        .unwrap()
 }
