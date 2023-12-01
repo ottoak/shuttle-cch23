@@ -1,3 +1,4 @@
+use std::num::ParseIntError;
 use axum::{
     extract::Path,
     http::StatusCode,
@@ -12,18 +13,35 @@ pub fn router() -> Router {
 
 #[tracing::instrument]
 pub async fn day1(Path(path): Path<String>) -> impl IntoResponse {
-    tracing::info!("{}", format!("Day 1 inputs: {}", path));
-    let calibrated = recalibrate(path);
-    tracing::info!("{}", format!("Day 1 output: {}", calibrated));
-
-    (StatusCode::OK, calibrated)
+    match recalibrate(path) {
+        Ok(c) => {
+            tracing::info!("{}", format!("Successfully calibrated: {}", c));
+            (StatusCode::OK, c)
+        }
+        Err(e) => {
+            tracing::error!("{}", format!("Could not parse path: {}", e));
+            (StatusCode::BAD_REQUEST, e.to_string())
+        }
+    }
 }
 
-fn recalibrate(input: String) -> String {
-    input
+fn recalibrate(input: String) -> Result<String, ParseIntError> {
+    let numbers: Result<Vec<_>, _>= input
         .split("/")
-        .map(|s| s.parse::<i32>().unwrap())
-        .reduce(|a, b| a ^ b)
-        .map(|x| x.pow(3).to_string())
-        .unwrap()
+        .map(|s| s.parse::<i32>())
+        .collect();
+
+    match numbers {
+        Ok(n) => {
+            let output = n.into_iter()
+                .reduce(|a, b| a ^ b)
+                .map(|x| x.pow(3).to_string())
+                .unwrap();
+
+            Ok(output)
+        }
+        Err(e) => {
+            Err(e)
+        }
+    }
 }
